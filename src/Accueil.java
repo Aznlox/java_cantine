@@ -6,7 +6,7 @@ import org.eclipse.swt.SWT;
 public class Accueil {
 
 	protected Shell shlAccueil;
-
+	
 	/**
 	 * Launch the application.
 	 * @param args

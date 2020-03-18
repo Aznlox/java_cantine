@@ -29,6 +29,8 @@ public class cantine_etudiant {
 	 * Open the window.
 	 */
 	public void open() {
+		
+		
 		Display display = Display.getDefault();
 		createContents();
 		shlCantinetudiant.open();
