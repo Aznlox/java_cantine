@@ -1,3 +1,9 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -5,7 +11,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
 import org.eclipse.swt.widgets.Button;
 
 public class connexion_admin {
@@ -45,9 +50,23 @@ public class connexion_admin {
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
-				   Accueil fen2 = new Accueil();
-				   shlAzJunior.close();
-				   fen2.open();  
+				   String url="jdbc:mysql://localhost/projet_java?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+				   String user="root";
+				   String password="";
+				   try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select * from compte where identifiant ="+lblId.getText()+" and mdp ="+lblMdp.getText());
+						while(rs.next()){
+							Accueil fen2 = new Accueil();
+							shlAzJunior.close();
+							fen2.open();
+						}
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue lors de la connexion à la base de données");
+						e.printStackTrace();
+					}
+				    
 			   }
 		});
 
