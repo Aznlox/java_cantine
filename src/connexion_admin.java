@@ -50,13 +50,13 @@ public class connexion_admin {
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
-				   String url="jdbc:mysql://localhost/projet_java?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+				   String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 				   String user="root";
 				   String password="";
 				   try {
 						Connection cnx = DriverManager.getConnection(url, user, password);
 						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-						ResultSet rs = stm.executeQuery("select * from compte where identifiant ="+lblId.getText()+" and mdp ="+lblMdp.getText());
+						ResultSet rs = stm.executeQuery("select * from compte where identifiant ='"+textId.getText()+"' and mdp ='"+textMdp.getText()+"'");
 						while(rs.next()){
 							Accueil fen2 = new Accueil();
 							shlAzJunior.close();
