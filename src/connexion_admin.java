@@ -24,7 +24,7 @@ public class connexion_admin {
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
 		Shell shlAzJunior = new Shell();
-		shlAzJunior.setSize(923, 724);
+		shlAzJunior.setSize(577, 475);
 		shlAzJunior.setText("Az Junior");
 		
 		Label lblId = new Label(shlAzJunior, SWT.NONE);
@@ -45,6 +45,9 @@ public class connexion_admin {
 		btnCo.setBounds(122, 226, 113, 35);
 		btnCo.setText("Se connecter");
 		
+		Label lblErreur = new Label(shlAzJunior, SWT.NONE);
+		lblErreur.setBounds(292, 226, 223, 31);
+		
 		btnCo.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
@@ -57,10 +60,14 @@ public class connexion_admin {
 						Connection cnx = DriverManager.getConnection(url, user, password);
 						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 						ResultSet rs = stm.executeQuery("select * from compte where identifiant ='"+textId.getText()+"' and mdp ='"+textMdp.getText()+"'");
-						while(rs.next()){
+						
+						if(rs.next()){
 							Accueil fen2 = new Accueil();
 							shlAzJunior.close();
 							fen2.open();
+						}
+						else {
+							lblErreur.setText("Mauvais identifiant ou mot de passe");
 						}
 					} catch (SQLException e) {
 						System.out.println("Une erreur est survenue lors de la connexion à la base de données");
