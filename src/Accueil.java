@@ -2,6 +2,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class Accueil {
 
@@ -54,6 +56,34 @@ public class Accueil {
 		Button btnModif = new Button(shlAccueil, SWT.NONE);
 		btnModif.setBounds(108, 233, 204, 35);
 		btnModif.setText("Modifier un \u00E9tudiant");
+		
+		btnAjout.addSelectionListener(new SelectionAdapter() {
+			 
+			   @Override
+			   public void widgetSelected(SelectionEvent arg0) {
+				   
+				   
+				   
+			   }
+		});
+		btnSuppr.addSelectionListener(new SelectionAdapter() {
+			 
+			   @Override
+			   public void widgetSelected(SelectionEvent arg0) {
+				   
+				   
+				   
+			   }
+		});
+		btnModif.addSelectionListener(new SelectionAdapter() {
+			 
+			   @Override
+			   public void widgetSelected(SelectionEvent arg0) {
+				   
+				   
+				   
+			   }
+		});
 
 	}
 }
