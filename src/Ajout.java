@@ -35,6 +35,8 @@ public class Ajout {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
+		shell.open();
+		shell.layout();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -84,7 +86,7 @@ public class Ajout {
 		textPrenom = new Text(shell, SWT.BORDER);
 		textPrenom.setBounds(207, 89, 91, 21);
 		
-		Combo comboClasse = new Combo(shell, SWT.NONE);
+		Combo comboClasse = new Combo(shell, SWT.READ_ONLY);
 		comboClasse.setBounds(207, 118, 91, 23);
 		
 		Button btnOui = new Button(shell, SWT.RADIO);
@@ -115,7 +117,7 @@ public class Ajout {
 		btnVendredi.setBounds(468, 177, 72, 16);
 		btnVendredi.setText("Vendredi");
 		
-		textRegime = new Text(shell, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+		textRegime = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textRegime.setBounds(207, 209, 178, 67);
 		
 		Button btnValider = new Button(shell, SWT.NONE);
