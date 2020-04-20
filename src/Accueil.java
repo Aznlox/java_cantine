@@ -45,28 +45,29 @@ public class Accueil {
 		shlAccueil.setSize(449, 445);
 		shlAccueil.setText("Accueil");
 		
-		Button btnAjout = new Button(shlAccueil, SWT.NONE);
-		btnAjout.setBounds(108, 87, 204, 35);
-		btnAjout.setText("Ajouter un \u00E9tudiant");
+		Button btnEtudiant = new Button(shlAccueil, SWT.NONE);
+		btnEtudiant.setBounds(108, 87, 204, 35);
+		btnEtudiant.setText("Tableau \u00E9tudiant");
 		
-		Button btnSuppr = new Button(shlAccueil, SWT.NONE);
-		btnSuppr.setBounds(108, 161, 204, 35);
-		btnSuppr.setText("Supprimer un \u00E9tudiant");
+		Button btnProf = new Button(shlAccueil, SWT.NONE);
+		btnProf.setBounds(108, 161, 204, 35);
+		btnProf.setText("Tableau professeur");
 		
 		Button btnModif = new Button(shlAccueil, SWT.NONE);
 		btnModif.setBounds(108, 233, 204, 35);
 		btnModif.setText("Modifier un \u00E9tudiant");
 		
-		btnAjout.addSelectionListener(new SelectionAdapter() {
+		btnEtudiant.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
-				   
+				   cantine_etudiant Tableau = new cantine_etudiant();
+				   Tableau.open();
 				   
 			   }
 		});
-		btnSuppr.addSelectionListener(new SelectionAdapter() {
+		btnProf.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
