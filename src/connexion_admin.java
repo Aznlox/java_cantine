@@ -23,10 +23,12 @@ public class connexion_admin {
 	 */
 	public static void main(String[] args) {
 		Display display = Display.getDefault();
+		//Création de la fenêtre
 		Shell shlAzJunior = new Shell();
 		shlAzJunior.setSize(577, 475);
-		shlAzJunior.setText("Az Junior");
+		shlAzJunior.setText("Connexion");
 		
+		//création des labels
 		Label lblId = new Label(shlAzJunior, SWT.NONE);
 		lblId.setBounds(122, 95, 96, 25);
 		lblId.setText("Identifiant :");
@@ -35,12 +37,14 @@ public class connexion_admin {
 		lblMdp.setBounds(122, 152, 123, 25);
 		lblMdp.setText("Mot de passe :");
 		
+		//création des zones de textes
 		textId = new Text(shlAzJunior, SWT.BORDER);
 		textId.setBounds(292, 92, 131, 31);
 		
 		textMdp = new Text(shlAzJunior, SWT.BORDER);
 		textMdp.setBounds(292, 149, 131, 31);
 		
+		//Bouton de connexion
 		Button btnCo = new Button(shlAzJunior, SWT.NONE);
 		btnCo.setBounds(122, 226, 113, 35);
 		btnCo.setText("Se connecter");
@@ -48,11 +52,13 @@ public class connexion_admin {
 		Label lblErreur = new Label(shlAzJunior, SWT.NONE);
 		lblErreur.setBounds(292, 226, 223, 31);
 		
+		//évènement appuie sur le bouton
 		btnCo.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
+				   //connexion bdd
 				   String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 				   String user="root";
 				   String password="";
@@ -61,6 +67,7 @@ public class connexion_admin {
 						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 						ResultSet rs = stm.executeQuery("select * from compte where identifiant ='"+textId.getText()+"' and mdp ='"+textMdp.getText()+"'");
 						
+						//connexion au compte
 						if(rs.next()){
 							Accueil fen2 = new Accueil();
 							shlAzJunior.close();
@@ -76,7 +83,8 @@ public class connexion_admin {
 				    
 			   }
 		});
-
+		
+		//ouverture de la fenêtre
 		shlAzJunior.open();
 		shlAzJunior.layout();
 		while (!shlAzJunior.isDisposed()) {

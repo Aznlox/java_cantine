@@ -56,9 +56,12 @@ public class Ajout {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		//Création de la fenêtre
 		shell = new Shell();
 		shell.setSize(587, 384);
+		shell.setText("Ajouter");
 		
+		//création des labels
 		Label lblTitre = new Label(shell, SWT.NONE);
 		lblTitre.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.NORMAL));
 		lblTitre.setBounds(30, 10, 126, 36);
@@ -123,17 +126,20 @@ public class Ajout {
 		labelVendredi.setVisible(false);
 		labelVendredi.setBounds(391, 251, 55, 15);
 		
+		//création des zones de textes
 		textNom = new Text(shell, SWT.BORDER);
 		textNom.setBounds(207, 60, 91, 21);
 		
 		textPrenom = new Text(shell, SWT.BORDER);
 		textPrenom.setBounds(207, 89, 91, 21);
 		
+		//setup de la liste déroulante
 		Combo comboClasse = new Combo(shell, SWT.READ_ONLY);
 		String[] items = new String[] {"BTS","Terminale","Première","Seconde"};
 		comboClasse.setItems(items);
 		comboClasse.setBounds(207, 118, 91, 23);
 		
+		//regroupement des boutons radio
 		Composite compositeCantine = new Composite(shell, SWT.NONE);
 		compositeCantine.setBounds(207, 133, 120, 44);
 		
@@ -142,6 +148,8 @@ public class Ajout {
 		btnOui.setText("Oui");
 		
 		Button btnNon = new Button(compositeCantine, SWT.RADIO);
+		
+		//récupération des données des boutons radio
 		btnOui.addSelectionListener(new SelectionAdapter()  {
 			 
             @Override
@@ -170,7 +178,7 @@ public class Ajout {
 		btnNon.setBounds(55, 20, 49, 16);
 		btnNon.setText("Non");
 	      
-		
+		//Récupération des données des boutons checkbox
 		Button btnLundi = new Button(shell, SWT.CHECK);
 		btnLundi.addSelectionListener(new SelectionAdapter()  {
 			 
@@ -273,23 +281,50 @@ public class Ajout {
 		textRegime = new Text(shell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		textRegime.setBounds(207, 209, 178, 67);
 		
+		//évènement du bouton valider
 		Button btnValider = new Button(shell, SWT.NONE);
 		btnValider.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				
+				//calcul du tarif
+				float tarif = 0;
+				if (labelLundi.getText() != "" ) {
+					tarif = tarif+6;
+				}
+				if (labelMardi.getText() != "" ) {
+					tarif = tarif+6;
+				}
+				if (labelMercredi.getText() != "" ) {
+					tarif = tarif+6;
+				}
+				if (labelJeudi.getText() != "" ) {
+					tarif = tarif+6;
+				}
+				if (labelVendredi.getText() != "" ) {
+					tarif = tarif+6;
+				}
+				tarif = tarif*4;
+				
+				//mise en texte des jours
 				labelJour.setText(labelLundi.getText()+labelMardi.getText()+labelMercredi.getText()+labelJeudi.getText()+labelVendredi.getText());
+				
+				//connexion à la bdd
 				String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 				String user="root";
 				String password="";
+				
+				//insertion des données dans la bdd
 				try {
 					Connection cnx = DriverManager.getConnection(url, user, password);
-					PreparedStatement pstm = cnx.prepareStatement("Insert into etudiant (nom, prenom, classe, cantine, jour, regime) Value(?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
+					PreparedStatement pstm = cnx.prepareStatement("Insert into etudiant (nom, prenom, classe, cantine, jour, regime, tarif) Value(?, ?, ?, ?, ?, ?, ?)",Statement.RETURN_GENERATED_KEYS);
 					pstm.setString(1, textNom.getText());
-					pstm.setString(2, textNom.getText());
+					pstm.setString(2, textPrenom.getText());
 					pstm.setString(3, comboClasse.getText());
 					pstm.setString(4, labelChoix.getText());
 					pstm.setString(5, labelJour.getText());
 					pstm.setString(6, textRegime.getText());
+					pstm.setFloat(7, tarif);
 
 					pstm.executeUpdate();
 					
@@ -308,9 +343,9 @@ public class Ajout {
 		btnAnnuler.setBounds(465, 296, 75, 25);
 		btnAnnuler.setText("Annuler");
 		
+		 
 		
-		
-			
+		//évènement du bouton annuler	
 		btnAnnuler.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

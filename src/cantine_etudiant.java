@@ -56,14 +56,25 @@ public class cantine_etudiant {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		//Création de la fenêtre
 		shlCantinetudiant = new Shell();
-		shlCantinetudiant.setSize(884, 737);
+		shlCantinetudiant.setSize(869, 705);
 		shlCantinetudiant.setText("Cantine \u00E9tudiant");
 		
+		//Création des labels
+		Label lblTotal = new Label(shlCantinetudiant, SWT.NONE);
+		lblTotal.setBounds(680, 546, 86, 15);
+		lblTotal.setText("Total du mois :");
+		
+		Label lblTarif = new Label(shlCantinetudiant, SWT.NONE);
+		lblTarif.setBounds(772, 546, 73, 15);
+		
+		//Création des boutons
 		Button btnAjout = new Button(shlCantinetudiant, SWT.NONE);
 		btnAjout.setBounds(50, 576, 204, 35);
 		btnAjout.setText("Ajouter un \u00E9tudiant");
 		
+		//event bouton ajouter un étudiant
 		btnAjout.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
@@ -71,6 +82,8 @@ public class cantine_etudiant {
 				   
 				   Ajout Ajouter = new Ajout();
 				   Ajouter.open();
+				   
+				   //maj des données du tableau
 					table.removeAll();
 				    String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 					String user="root";
@@ -93,23 +106,36 @@ public class cantine_etudiant {
 						System.out.println("Une erreur est survenue lors de la connexion à la base de données");
 						e.printStackTrace();
 					}
+					
+					//maj du tarif total
+					try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+						rs.next();
+						lblTarif.setText(rs.getString(1)+" €");
+				        
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+						e.printStackTrace();
+					}
 				   
 			   }
 		});
+		
 		
 		Button btnModif = new Button(shlCantinetudiant, SWT.NONE);
 		btnModif.setBounds(470, 576, 204, 35);
 		btnModif.setText("Modifier un \u00E9tudiant");
 		
-		Button btnSuppr = new Button(shlCantinetudiant, SWT.NONE);
-		btnSuppr.setBounds(260, 576, 204, 35);
-		btnSuppr.setText("Supprimer un \u00E9tudiant");
-		
-		btnSuppr.addSelectionListener(new SelectionAdapter() {
+		//event bouton modif un étudiant
+		btnModif.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
+				   Modifier modif = new Modifier();
+				   modif.open();
 				   
 				   table.removeAll();
 				   String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -133,15 +159,77 @@ public class cantine_etudiant {
 					   System.out.println("Une erreur est survenue lors de la connexion à la base de données");
 					   e.printStackTrace();
 				   }
+				   try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+						rs.next();
+						lblTarif.setText(rs.getString(1)+" €");
+				        
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+						e.printStackTrace();
+					}
 				   
 			  }
 		});
 		
+	
+		Button btnSuppr = new Button(shlCantinetudiant, SWT.NONE);
+		btnSuppr.setBounds(260, 576, 204, 35);
+		btnSuppr.setText("Supprimer un \u00E9tudiant");
 		
+		//event bouton supprimer un étudiant
+		btnSuppr.addSelectionListener(new SelectionAdapter() {
+			 
+			   @Override
+			   public void widgetSelected(SelectionEvent arg0) {
+				   
+				   Supprimer suppr = new Supprimer();
+				   suppr.open();
+				   
+				   table.removeAll();
+				   String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+				   String user="root";
+				   String password="";
+				   try {
+					   Connection cnx = DriverManager.getConnection(url, user, password);
+					   Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+					   ResultSet rs = stm.executeQuery("select * from etudiant");
+					   java.sql.ResultSetMetaData rsmd = rs.getMetaData();
+					   int columnsNumber = rsmd.getColumnCount();
+
+				       TableItem item;
+				       while (rs.next()) {
+				           item = new TableItem(table, SWT.NONE);
+				           for (int i = 1; i <= columnsNumber; i++) {            
+				               item.setText(i - 1, rs.getString(i));
+				           }
+				       }
+				   } catch (SQLException e) {
+					   System.out.println("Une erreur est survenue lors de la connexion à la base de données");
+					   e.printStackTrace();
+				   }
+				   try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+						rs.next();
+						lblTarif.setText(rs.getString(1)+" €");
+				        
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+						e.printStackTrace();
+					}
+				   
+			  }
+		});
+		
+		//setup de la table
 		table = new Table(shlCantinetudiant, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		table.setBounds(50, 100, 613, 440);
+		table.setBounds(50, 100, 689, 440);
 		
 		
 		TableColumn tblclmnNom = new TableColumn(table, SWT.CENTER);
@@ -169,6 +257,11 @@ public class cantine_etudiant {
 		tblclmnNewColumn_1.setWidth(126);
 		tblclmnNewColumn_1.setText("R\u00E9gime alimentaire");
 		
+		TableColumn tblclmnTarif = new TableColumn(table, SWT.NONE);
+		tblclmnTarif.setWidth(100);
+		tblclmnTarif.setText("Tarif");
+		
+		//bouton de trie par nom
 		Button btnTrinom = new Button(shlCantinetudiant, SWT.NONE);
 		btnTrinom.setBounds(67, 43, 122, 35);
 		btnTrinom.setText("Trier par nom");
@@ -198,9 +291,21 @@ public class cantine_etudiant {
 						System.out.println("Une erreur est survenue lors de la connexion à la base de données");
 						e.printStackTrace();
 					}
+					try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+						rs.next();
+						lblTarif.setText(rs.getString(1)+" €");
+				        
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+						e.printStackTrace();
+					}
 			   }
 		});
 		
+		//bouton de trie par classe
 		Button btnTriclasse = new Button(shlCantinetudiant, SWT.NONE);
 		btnTriclasse.setBounds(267, 43, 148, 35);
 		btnTriclasse.setText("Trier par classe");
@@ -215,7 +320,7 @@ public class cantine_etudiant {
 					try {
 						Connection cnx = DriverManager.getConnection(url, user, password);
 						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-						ResultSet rs = stm.executeQuery("select * from etudiant order by classe desc");
+						ResultSet rs = stm.executeQuery("select * from etudiant order by classe");
 						java.sql.ResultSetMetaData rsmd = rs.getMetaData();
 				        int columnsNumber = rsmd.getColumnCount();
 
@@ -230,17 +335,44 @@ public class cantine_etudiant {
 						System.out.println("Une erreur est survenue lors de la connexion à la base de données");
 						e.printStackTrace();
 					}
+					try {
+						Connection cnx = DriverManager.getConnection(url, user, password);
+						Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+						ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+						rs.next();
+						lblTarif.setText(rs.getString(1)+" €");
+				        
+					} catch (SQLException e) {
+						System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+						e.printStackTrace();
+					}
 			   }
 		});
 		
-		Label lblTotal = new Label(shlCantinetudiant, SWT.NONE);
-		lblTotal.setBounds(693, 546, 209, 52);
-		lblTotal.setText("Total du mois :");
+		
+		//Calcul et affichage du tarif total
+		String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String user="root";
+		String password="";
+		try {
+			Connection cnx = DriverManager.getConnection(url, user, password);
+			Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stm.executeQuery("select sum(tarif) from etudiant");
+			rs.next();
+			lblTarif.setText(rs.getString(1)+" €");
+	        
+		} catch (SQLException e) {
+			System.out.println("Une erreur est survenue l7, 54e la connexion à la base de données");
+			e.printStackTrace();
+		}
+		
+		
 
 	}
 	
+	//méthode pour inséré les données de la bdd dans le tableau
 	protected void insertTable() {
-		table.clearAll();
+		table.removeAll();
 		String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 		String user="root";
 		String password="";

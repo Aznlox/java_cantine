@@ -41,22 +41,21 @@ public class Accueil {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		//Création de la fenêtre
 		shlAccueil = new Shell();
-		shlAccueil.setSize(449, 445);
+		shlAccueil.setSize(450, 363);
 		shlAccueil.setText("Accueil");
 		
+		//Création des boutons
 		Button btnEtudiant = new Button(shlAccueil, SWT.NONE);
-		btnEtudiant.setBounds(108, 87, 204, 35);
+		btnEtudiant.setBounds(108, 93, 204, 35);
 		btnEtudiant.setText("Tableau \u00E9tudiant");
 		
 		Button btnProf = new Button(shlAccueil, SWT.NONE);
-		btnProf.setBounds(108, 161, 204, 35);
+		btnProf.setBounds(108, 179, 204, 35);
 		btnProf.setText("Tableau professeur");
 		
-		Button btnModif = new Button(shlAccueil, SWT.NONE);
-		btnModif.setBounds(108, 233, 204, 35);
-		btnModif.setText("Modifier un \u00E9tudiant");
-		
+		//event bouton tableau étudiant
 		btnEtudiant.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
@@ -67,24 +66,17 @@ public class Accueil {
 				   
 			   }
 		});
+		
+		//event bouton tableau prof
 		btnProf.addSelectionListener(new SelectionAdapter() {
 			 
 			   @Override
 			   public void widgetSelected(SelectionEvent arg0) {
 				   
-				   
-				   
-			   }
-		});
-		btnModif.addSelectionListener(new SelectionAdapter() {
-			 
-			   @Override
-			   public void widgetSelected(SelectionEvent arg0) {
-				   
-				   
+				   cantine_prof Tableau = new cantine_prof();
+				   Tableau.open();
 				   
 			   }
 		});
-
 	}
 }

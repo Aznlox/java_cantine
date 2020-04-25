@@ -1,6 +1,11 @@
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Button;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -29,8 +34,11 @@ public class cantine_prof {
 	 * Open the window.
 	 */
 	public void open() {
+		
+		
 		Display display = Display.getDefault();
 		createContents();
+		insertTable();
 		shlCantineprof.open();
 		shlCantineprof.layout();
 		while (!shlCantineprof.isDisposed()) {
@@ -44,38 +52,34 @@ public class cantine_prof {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		//création de la fenêtre
 		shlCantineprof = new Shell();
-		shlCantineprof.setSize(956, 737);
+		shlCantineprof.setSize(869, 639);
 		shlCantineprof.setText("Cantine professeur");
 		
-		Button btnNewButton = new Button(shlCantineprof, SWT.NONE);
-		btnNewButton.setBounds(50, 576, 204, 35);
-		btnNewButton.setText("Ajouter un \u00E9tudiant");
+		//création des labels
+		Label lblTotal = new Label(shlCantineprof, SWT.NONE);
+		lblTotal.setBounds(666, 507, 86, 15);
+		lblTotal.setText("Total du mois :");
 		
-		Button btnNewButton_1 = new Button(shlCantineprof, SWT.NONE);
-		btnNewButton_1.setBounds(470, 576, 204, 35);
-		btnNewButton_1.setText("Modifier un \u00E9tudiant");
+		Label lblTarif = new Label(shlCantineprof, SWT.NONE);
+		lblTarif.setBounds(758, 507, 73, 15);
 		
-		Button btnNewButton_2 = new Button(shlCantineprof, SWT.NONE);
-		btnNewButton_2.setBounds(260, 576, 204, 35);
-		btnNewButton_2.setText("Supprimer un \u00E9tudiant");
-		
+		//setup du tableau
 		table = new Table(shlCantineprof, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
-		table.setBounds(50, 100, 835, 440);
+		table.setBounds(58, 61, 611, 440);
 		
-		TableColumn tblclmnNom = new TableColumn(table, SWT.NONE);
+		
+		TableColumn tblclmnNom = new TableColumn(table, SWT.CENTER);
+		tblclmnNom.setResizable(false);
 		tblclmnNom.setWidth(100);
 		tblclmnNom.setText("Nom");
 		
 		TableColumn tblclmnPrnom = new TableColumn(table, SWT.NONE);
 		tblclmnPrnom.setWidth(100);
 		tblclmnPrnom.setText("Pr\u00E9nom");
-		
-		TableColumn tblclmnClasse = new TableColumn(table, SWT.NONE);
-		tblclmnClasse.setWidth(100);
-		tblclmnClasse.setText("Classe");
 		
 		TableColumn tblclmnCantine = new TableColumn(table, SWT.NONE);
 		tblclmnCantine.setWidth(82);
@@ -85,30 +89,59 @@ public class cantine_prof {
 		tblclmnJour.setWidth(100);
 		tblclmnJour.setText("Jour");
 		
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setText("R\u00E9gime");
-		tblclmnNewColumn.setWidth(166);
-		
 		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn_1.setWidth(182);
+		tblclmnNewColumn_1.setWidth(126);
 		tblclmnNewColumn_1.setText("R\u00E9gime alimentaire");
 		
-		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
+		TableColumn tblclmnTarif = new TableColumn(table, SWT.NONE);
+		tblclmnTarif.setWidth(100);
+		tblclmnTarif.setText("Tarif");
 		
-		TableItem tableItem = new TableItem(table, SWT.NONE);
-		tableItem.setText(new String[] {"Goncalves", "Nathan", "BTS", "Oui", "L,Ma,J,V", "Demi-Pensionnaire", "Non"});
 		
-		Button btnTrierParNom = new Button(shlCantineprof, SWT.NONE);
-		btnTrierParNom.setBounds(67, 43, 122, 35);
-		btnTrierParNom.setText("Trier par nom");
 		
-		Button btnTrierParClasse = new Button(shlCantineprof, SWT.NONE);
-		btnTrierParClasse.setBounds(267, 43, 148, 35);
-		btnTrierParClasse.setText("Trier par classe");
+		//calcul et affichage tarif total
+		String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String user="root";
+		String password="";
+		try {
+			Connection cnx = DriverManager.getConnection(url, user, password);
+			Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stm.executeQuery("select sum(tarif) from professeur");
+			rs.next();
+			lblTarif.setText(rs.getString(1)+" €");
+	        
+		} catch (SQLException e) {
+			System.out.println("Une erreur est survenue lors de la connexion à la base de données");
+			e.printStackTrace();
+		}
 		
-		Label lblTotalDuMois = new Label(shlCantineprof, SWT.NONE);
-		lblTotalDuMois.setBounds(693, 546, 209, 52);
-		lblTotalDuMois.setText("Total du mois :");
+		
 
+	}
+	
+	//méthode pour inséré les données de la bdd dans le tableau
+	protected void insertTable() {
+		table.removeAll();
+		String url="jdbc:mysql://localhost/cantine?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		String user="root";
+		String password="";
+		try {
+			Connection cnx = DriverManager.getConnection(url, user, password);
+			Statement stm = cnx.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stm.executeQuery("select * from professeur");
+			java.sql.ResultSetMetaData rsmd = rs.getMetaData();
+	        int columnsNumber = rsmd.getColumnCount();
+
+	        TableItem item;
+	        while (rs.next()) {
+	            item = new TableItem(table, SWT.NONE);
+	            for (int i = 1; i <= columnsNumber; i++) {            
+	                item.setText(i - 1, rs.getString(i));
+	            }
+	        }
+		} catch (SQLException e) {
+			System.out.println("Une erreur est survenue lors de la connexion à la base de données");
+			e.printStackTrace();
+		}
 	}
 }
